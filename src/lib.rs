@@ -31,7 +31,7 @@
 use bevy::winit::WinitWindows;
 use bevy::{
     prelude::*,
-    render::{pipelined_rendering::RenderExtractApp, RenderApp, RenderSet},
+    render::{pipelined_rendering::RenderExtractApp, Render, RenderApp, RenderSet},
     utils::Instant,
 };
 
@@ -59,10 +59,10 @@ impl Plugin for FramepacePlugin {
             .insert_resource(settings_proxy.clone())
             .insert_resource(limit.clone())
             .insert_resource(stats.clone())
-            .add_system(update_proxy_resources);
+            .add_systems(Update, update_proxy_resources);
 
         #[cfg(not(target_arch = "wasm32"))]
-        app.add_system(get_display_refresh_rate);
+        app.add_systems(Update, get_display_refresh_rate);
 
         if let Ok(sub_app) = app.get_sub_app_mut(RenderExtractApp) {
             sub_app
@@ -70,7 +70,8 @@ impl Plugin for FramepacePlugin {
                 .insert_resource(settings_proxy)
                 .insert_resource(limit)
                 .insert_resource(stats)
-                .add_system(
+                .add_systems(
+                    Update,
                     framerate_limiter
                         .run_if(|settings: Res<FramepaceSettingsProxy>| settings.is_enabled()),
                 );
@@ -80,7 +81,8 @@ impl Plugin for FramepacePlugin {
                 .insert_resource(settings_proxy)
                 .insert_resource(limit)
                 .insert_resource(stats)
-                .add_system(
+                .add_systems(
+                    Render,
                     framerate_limiter
                         .in_set(RenderSet::Cleanup)
                         .after(World::clear_entities)
