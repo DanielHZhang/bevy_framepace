@@ -93,7 +93,7 @@ impl Plugin for FramepacePlugin {
 }
 
 /// Framepacing plugin configuration.
-#[derive(Debug, Clone, Resource, Reflect, FromReflect)]
+#[derive(Debug, Clone, Resource, Reflect)]
 #[reflect(Resource)]
 pub struct FramepaceSettings {
     /// Configures the framerate limiting strategy.
@@ -135,7 +135,7 @@ fn update_proxy_resources(settings: Res<FramepaceSettings>, proxy: Res<Framepace
 }
 
 /// Configures the framelimiting technique for the app.
-#[derive(Debug, Default, Clone, Reflect, FromReflect)]
+#[derive(Debug, Default, Clone, Reflect)]
 pub enum Limiter {
     /// Uses the window's refresh rate to set the frametime limit, updating when the window changes
     /// monitors.
